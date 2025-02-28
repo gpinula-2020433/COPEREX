@@ -9,9 +9,6 @@ import {
  } from "./user.controller.js";
 import { isAdmin, validateJwt } from "../../middlewares/validate.jwt.js";
 import { updateUserValidator } from "../../middlewares/validators.js";
-/* import { 
-    uploadProfilePicture
- } from "../../middlewares/multer.uploads.js" */
 
 const api = Router()
 
@@ -27,14 +24,6 @@ api.put('/:id',
     update
 )
 
-/* 
-api.put('/updateProfilePicture/:id',
-    [
-        validateJwt,
-        uploadProfilePicture.single('profilePicture')
-    ],
-    updateProfilePicture
-) */
 
 export default api
 

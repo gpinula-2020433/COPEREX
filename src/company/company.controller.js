@@ -184,9 +184,9 @@ export const getFilteredAndSortedCompanies = async (req, res) => {
         yearsInBusiness, 
         orderByName 
     } = req.query // Leer los filtros desde los parámetros de la URL
-
     try {
-        // Filtros de la consulta
+        
+        //Creamos una constante para almacenar los filtros de la consulta
         const filters = {}
 
         // Filtrar por categoría (si se pasa el parámetro 'category')
@@ -196,15 +196,15 @@ export const getFilteredAndSortedCompanies = async (req, res) => {
 
         // Filtrar por años de trayectoria (si se pasa el parámetro 'yearsInBusiness')
         if (yearsInBusiness) {
-            filters.yearsInBusiness = yearsInBusiness // Filtra empresas con años de trayectoria mayores o iguales a 'yearsInBusiness'
+            filters.yearsInBusiness = yearsInBusiness
         }
 
-        // Realizar la consulta con los filtros
-        //Si no se pasan filtros, devolveria todos los datos
+        //Realizar la consulta con los filtros 
+        // Si todos dan false es como que no se pasan filtros, devolveria todos los datos
         let companiesQuery = Company.find(filters)
-            .skip(0)  // Usamos parseInt para convertir los parámetros a números (si están presentes)
-            .limit(20)  // Similar para el límite de resultados
-            .populate('registeredBy', 'username -_id')  // Aquí asumo que quieres el 'username' del usuario que registró la empresa
+            .skip(0)
+            .limit(20)
+            .populate('registeredBy', 'username -_id')
 
         // Ordenar las empresas (por nombre, A-Z o Z-A, si se pasa el parámetro 'orderByName')
         if (orderByName) {
@@ -217,28 +217,31 @@ export const getFilteredAndSortedCompanies = async (req, res) => {
 
         const companies = await companiesQuery
 
-        if (companies.length === 0) {
-            return res.status(404).send({
-                success: false,
-                message: 'Companies not found'
-            })
+        if(companies.length === 0){
+            return res.status(404).send(
+                {
+                    success: false,
+                    message: 'companies not found'
+                }
+            )
         }
-
-        return res.send({
-            success: true,
-            message: 'Companies found:',
-            total: companies.length,
-            companies
-        })
-
+        return res.send(
+            {
+                success: true,
+                message: 'companies found:',
+                total: companies.length + ' categories',
+                companies
+            }
+        )
     } catch (err) {
         console.error(err)
-        return res.status(500).send({
-            success: false,
-            message: 'General error',
-            err
-        })
+        return res.status(500).send(
+            {
+                success: false,
+                message: 'General error',
+                err
+            }
+        )
     }
 }
-
 

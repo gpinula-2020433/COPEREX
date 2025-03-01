@@ -11,6 +11,7 @@ import cors from 'cors'//acceso al Api
 import userRoutes from '../src/user/user.routes.js'
 import authRoutes from '../src/auth/auth.routes.js'
 import companyRoutes from '../src/company/company.routes.js'
+import excelRoutes from '../src/excel/excel.routes.js'
 import { limiter } from '../middlewares/rate.limit.js'
 import { addDefaultAdmin } from '../src/user/user.controller.js'
 
@@ -29,6 +30,7 @@ const routes = (app)=>{
     app.use(authRoutes)
     app.use('/v1/user', userRoutes)
     app.use('/v1/company', companyRoutes)
+    app.use('/v1/excel', excelRoutes)
 }
 
 export const initServer =()=>{

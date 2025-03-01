@@ -10,6 +10,7 @@ import helmet from 'helmet'//seguridad para HTTP
 import cors from 'cors'//acceso al Api
 import userRoutes from '../src/user/user.routes.js'
 import authRoutes from '../src/auth/auth.routes.js'
+import companyRoutes from '../src/company/company.routes.js'
 import { limiter } from '../middlewares/rate.limit.js'
 import { addDefaultAdmin } from '../src/user/user.controller.js'
 
@@ -27,7 +28,7 @@ const configs = (app)=>{
 const routes = (app)=>{
     app.use(authRoutes)
     app.use('/v1/user', userRoutes)
-    
+    app.use('/v1/company', companyRoutes)
 }
 
 export const initServer =()=>{

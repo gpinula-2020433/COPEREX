@@ -13,7 +13,8 @@ const companySchema = Schema(
             required: [true, 'Description is required']
         },
         levelOfImpact: {
-            type: Number,
+            type: String,
+            maxLength: [45, `Can't be overcome 45 characters`],
             required: [true, 'Level of impact is required']
         },
         yearsOfTrajectory: {
@@ -25,7 +26,7 @@ const companySchema = Schema(
             maxLength: [40, `Can't be overcome 50 characters`],
             required: [true, 'Business category is required']
         },
-        registeredBy: {
+        registeredBy: {//No lo pide
             type: Schema.Types.ObjectId,
             ref: 'User',
             required: [true, 'User is required']

@@ -181,7 +181,7 @@ export const getAll = async(req, res)=>{
 export const getFilteredAndSortedCompanies = async (req, res) => {
     const { 
         category, 
-        yearsInBusiness, 
+        yearsOfTrajectory, 
         orderByName 
     } = req.query // Leer los filtros desde los parámetros de la URL
     try {
@@ -194,9 +194,9 @@ export const getFilteredAndSortedCompanies = async (req, res) => {
             filters.category = category
         }
 
-        // Filtrar por años de trayectoria (si se pasa el parámetro 'yearsInBusiness')
-        if (yearsInBusiness) {
-            filters.yearsInBusiness = yearsInBusiness
+        // Filtrar por años de trayectoria (si se pasa el parámetro 'yearsOfTrajectory')
+        if (yearsOfTrajectory) {
+            filters.yearsOfTrajectory = yearsOfTrajectory
         }
 
         //Realizar la consulta con los filtros 

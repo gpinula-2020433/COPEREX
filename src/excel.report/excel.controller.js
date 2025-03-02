@@ -37,11 +37,8 @@ export const createExcel = async (req, res = Response) => {
             })
         })
         const fileName = `Repor_Companies_${Date.now()}.xlsx`
-        const filePath = path.join(__dirname, '..', 'Generated', 'excelCompany', fileName)
-        const reportsDir = path.join(__dirname, 'companies');
-        if (!fs.existsSync(reportsDir)) {
-            fs.mkdirSync(reportsDir);
-        }
+        const filePath = path.join(__dirname, '..', 'generated', 'excel.company', fileName)
+        
         await workbook.xlsx.writeFile(filePath);
         console.log('File saved at:', filePath);
         res.setHeader(

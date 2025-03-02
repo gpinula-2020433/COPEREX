@@ -6,27 +6,6 @@ export const save = async(req, res) => {
     const data = req.body
     try {
 
-        //Si da false es porque no existe y lo guarda directamente
-        if(await Company.findOne({name: data.name})){
-            return res.send(
-                {
-                    success: false,
-                    message: `The company | ${data.name} | already exists`
-                }
-            )
-        }
-        const categoriaExistente = await Company.findOne(
-            {description: data.description}
-        )
-        if(categoriaExistente){
-            return res.send(
-                {
-                    success: false,
-                    message: `The company | ${categoriaExistente.name} | already has that description`
-                }
-            )
-        }
-
         data.registeredBy = req.user.uid
         const company = new Company(data)
         await company.save()
@@ -53,26 +32,6 @@ export const updateCompany = async(req, res)=>{
     try {
         const { id } = req.params
         const data = req.body
-        
-        if(await Company.findOne({name: data.name})){
-            return res.send(
-                {
-                    success: false,
-                    message: `The company | ${data.name} | already exists`
-                }
-            )
-        }
-        const categoriaExistente = await Company.findOne(
-            {description: data.description}
-        )
-        if(categoriaExistente){
-            return res.send(
-                {
-                    success: false,
-                    message: `The company | ${categoriaExistente.name} | already has that description`
-                }
-            )
-        }
 
         const update = await Company.findByIdAndUpdate(
             id,
@@ -185,22 +144,19 @@ export const getFilteredAndSortedCompanies = async (req, res) => {
         orderByName 
     } = req.query // Leer los filtros desde los parámetros de la URL
     try {
-        
         //Creamos una constante para almacenar los filtros de la consulta
         const filters = {}
 
-        // Filtrar por categoría (si se pasa el parámetro 'category')
+        //Filtramos por categoria y años de trajectory si da true(si lo enviaron)
         if (category) {
             filters.category = category
         }
-
-        // Filtrar por años de trayectoria (si se pasa el parámetro 'yearsOfTrajectory')
         if (yearsOfTrajectory) {
             filters.yearsOfTrajectory = yearsOfTrajectory
         }
 
         //Realizar la consulta con los filtros 
-        // Si todos dan false es como que no se pasan filtros, devolveria todos los datos
+        //Si todos dan false es como que no se pasan filtros, devolveria todos los datos
         let companiesQuery = Company.find(filters)
             .skip(0)
             .limit(20)
@@ -216,7 +172,6 @@ export const getFilteredAndSortedCompanies = async (req, res) => {
         }
 
         const companies = await companiesQuery
-
         if(companies.length === 0){
             return res.status(404).send(
                 {

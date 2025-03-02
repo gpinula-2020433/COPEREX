@@ -2,54 +2,58 @@
 
 import { body } from "express-validator";
 import { validateErrors } from "./validate.errors.js";
-import { existEmail, existUsername, notRequiredField, objectIdValid } from "../utils/db.validators.js";
+import { 
 
-export const registerValidator = [
+    
+    notRequiredField, 
+    existNameCompany,
+    existDescriptionCompany
+} from "../utils/db.validators.js";
+
+
+export const registerCompanyValidator = [
     body('name', 'Name cannot be empty')
+        .notEmpty()
+        .custom(existNameCompany),
+    body('description', 'Description cannot be empty')
+        .notEmpty()
+        .custom(existDescriptionCompany),
+    body('levelOfImpact', ' cannot be empty')
         .notEmpty(),
-    body('surname', 'Surname cannot be empty')
+    body('yearsOfTrajectory', 'Years of trajectory cannot be empty')
+        .notEmpty()
+        .isInt()
+        .withMessage('Years of trajectory must be a number integer'),
+    body('category', ' cannot be empty')
         .notEmpty(),
-    body('username', 'Username cannot be empty')
-        .notEmpty()
-        .toLowerCase(),
-    body('email', 'Email cannot be empty')
-        .notEmpty()
-        .isEmail()
-        .custom(existEmail),
-    body('username')
-        .notEmpty()
-        .toLowerCase()
-        .custom(existUsername),
-    body('password', 'Password cannot be empty')
-        .notEmpty()
-        .isStrongPassword()
-        .withMessage('Password must be strong')
-        .isLength({min: 8})
-        .withMessage('Password need min characters'),
-    body('phone', 'Phone cannot be empty')
-        .notEmpty()
-        .isMobilePhone(),
+    body('registeredBy', 'RegisterBy is not required' )
+        .optional()
+        .notEmpty(),
     validateErrors
 ]
-
-export const updateUserValidator = [
-    body('username')
+export const updateCompanyValidator = [
+    body('name', 'Name cannot be empty')
         .optional()
         .notEmpty()
-        .toLowerCase()
-        .custom((username, { req }) => existUsername(username, req.user)),
-    body('email')
+        .custom(existNameCompany),
+    body('description', 'Description cannot be empty')
         .optional()
         .notEmpty()
-        .isEmail()
-        .custom((email, {req}) => existEmail(email, req.user)),
-    body('password')
+        .custom(existDescriptionCompany),
+    body('levelOfImpact', ' cannot be empty')
+        .optional()
+        .notEmpty(),
+    body('yearsOfTrajectory', 'Years of trajectory cannot be empty')
+        .optional()
+        .notEmpty()
+        .isInt()
+        .withMessage('Years of trajectory must be a number integer'),
+    body('category', ' cannot be empty')
+        .optional()
+        .notEmpty(),
+    body('registeredBy', 'RegisterBy is not required' )
         .optional()
         .notEmpty()
         .custom(notRequiredField),
-    body('role')
-        .optional()
-        .notEmpty()
-        .custom(notRequiredField),
+    validateErrors
 ]
-

@@ -1,6 +1,6 @@
 //Gestionar funciones de usuario
 
-import { checkPassword, encrypt } from '../../utils/encrypt.js'
+import { encrypt } from '../../utils/encrypt.js'
 import User from './user.model.js'
 
 //Listar todos
@@ -33,83 +33,6 @@ export const getAll = async(req,res)=>{
     }
 }
 
-//Obtener uno
-export const get = async(req, res)=>{
-    try {
-        //obtener el id del Producto a mostrar
-        let { id } = req.params
-        let user = await User.findById(id)
-
-        if(!user)
-        return res.status(404).send(
-            {
-                success: false,
-                message: 'User not found'
-            }
-            )
-        return res.send(
-            {
-                success: true,
-                message: 'User found: ', 
-                user
-            }
-        )
-    } catch (err) {
-        console.error('General error', err)
-        return res.status(500).send(
-            {
-                success: false,
-                message: 'General error', 
-                err
-            }
-        )
-    }
-}
-
-//Actualizar datos genereales
-export const update = async(req, res)=>{
-    try{
-        const { id } = req.params
-        const data = req.body
-
-        if(req.user.uid != id){
-            return res.send(
-                {
-                    success: false,
-                    message: `${req.user.name} | No puedes actualizar un perfil que no sea tuyo`
-                }
-            )
-        }
-        const update = await User.findByIdAndUpdate(
-            id,
-            data,
-            {new: true}
-        )
- 
-        if(!update) return res.status(404).send(
-            {
-                success: false,
-                message: 'User not found'
-            }
-        )
-        return res.send(
-            {
-                success: true,
-                message: 'User updated',
-                user: update
-            }
-        )
-    }catch(err){
-        console.error('General error', err)
-        return res.status(500).send(
-            {
-                success: false,
-                message: 'General error',
-                err
-            }
-        )
-    }
-}
 
 //Para el admin por defecto
 export const addDefaultAdmin = async()=>{
@@ -141,63 +64,5 @@ export const addDefaultAdmin = async()=>{
         }
     } catch (err) {
         console.error('Error creating default admin', err)
-    }
-}
-
-export const updatePassword = async(req, res)=>{
-    try {
-        const {id} = req.params
-        let { oldPassword, newPassword } = req.body
-
-        const user = await User.findById(id)
-
-        if(req.user.uid != id){
-            return res.send(
-                {
-                    success: false,
-                    message: `${req.user.name} | No puedes actualizar un perfil que no sea tuyo`
-                }
-            )
-        }
-
-        if(!user){
-            return res.status(404).send(
-                {
-                    success: false,
-                    message: 'No se encontro al user'
-                }
-            )
-        }
-        
-        if(! await checkPassword(user.password, oldPassword)){
-            return res.send(
-                {
-                    success: false,
-                    message: 'Password Incorrect'
-                }
-            )
-        }
-
-        newPassword = await encrypt(newPassword)
-
-        await User.findByIdAndUpdate(
-            id,
-            {password: newPassword},
-            {new: true}
-        )
-        return res.send(
-            {
-                success: true,
-                message: 'Password updated'
-            }
-        )
-    } catch (err) {
-        console.error(
-            {
-                success: false,
-                message: 'General error',
-                err 
-            }
-        )
     }
 }

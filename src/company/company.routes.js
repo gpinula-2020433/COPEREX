@@ -7,14 +7,18 @@ import {
     getFilteredAndSortedCompanies
 } from './company.controller.js';
 import { validateJwt, isAdmin } from '../../middlewares/validate.jwt.js';
+import {
+    registerCompanyValidator,
+    updateCompanyValidator
+} from '../../middlewares/validators.js'
 
 const api = Router();
 
 api.get('/', getAll)
-api.get('/companiesFiltered',getFilteredAndSortedCompanies )
+api.get('/companiesFiltered', getFilteredAndSortedCompanies )
 api.get('/:id', [validateJwt, isAdmin], getCompanyID)
-api.post('/', [validateJwt, isAdmin], save)
-api.put('/:id', [validateJwt, isAdmin] , updateCompany)
-//api.delete('/:id', [validateJwt, isAdmin] , ) no hay delete
+
+api.post('/', [validateJwt, isAdmin, registerCompanyValidator], save)
+api.put('/:id', [validateJwt, isAdmin, updateCompanyValidator] , updateCompany)
 
 export default api
